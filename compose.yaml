@@ -1,0 +1,39 @@
+name: mygprocess
+
+secrets:
+  minio_password:
+    file: multipass/minio_password
+
+services:
+  pyscripts:
+    container_name: myg-pyscripts
+    build:
+      context: ./
+      dockerfile: services/pyscripts/Dockerfile
+    volumes:
+      - ./tempfiles:/app/tempfiles
+    env_file: multipass/.pyscripts-env
+    stdin_open: true   # Permet d'utiliser un shell interactif
+    tty: true          # Garde le terminal attaché
+
+  minio:
+    container_name: myg-minio
+    build: services/minio
+    ports:
+      - 9000:9000
+      - 9001:9001
+    volumes:
+      - minio_data:/data
+    environment:
+      MINIO_ROOT_PASSWORD_FILE: /run/secrets/minio_password
+      MINIO_ROOT_USER: minioadmin
+    secrets:
+      - minio_password
+    # command: server /data --console-address ':9001' --certs-dir /opt/minio/certs
+    command: server /data --console-address ':9001'
+    restart: unless-stopped
+
+volumes:
+  staticfiles:
+  minio_data:
+  db_data:

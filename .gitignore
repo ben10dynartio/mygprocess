@@ -1,3 +1,6 @@
+# Project env & pass
+multipass/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -54,6 +57,9 @@ cover/
 # Translations
 *.mo
 *.pot
+
+# Idea project
+.idea/*
 
 # Django stuff:
 *.log
