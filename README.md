@@ -1,0 +1,2 @@
+# mygprocess
+MapYourGrid Automation Docker
