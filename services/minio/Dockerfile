@@ -12,3 +12,9 @@ RUN mkdir -p /opt/minio/certs && \
 FROM minio/minio
 
 COPY --from=certs_gen /opt/minio/certs /opt/minio/certs
+
+# Copier le script d'init
+#COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+#RUN chmod +x /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT [ "/bin/sh", "/minio-entrypoint.sh" ]

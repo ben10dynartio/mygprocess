@@ -1,5 +1,6 @@
 # Project env & pass
 multipass/*
+releasedata/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
