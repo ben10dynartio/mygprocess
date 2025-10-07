@@ -35,16 +35,11 @@ RUN pip install -r lib/filorion/requirements.txt
 
 COPY ./releasedata/kontur/ ./apps_mapyourgrid/spatial_analysis/data_kontur
 
-#COPY scripts/update-all.sh /usr/local/bin/update-all
-#RUN chmod +x /usr/local/bin/update-all
+COPY ./services/pyscripts/pullrepo.sh /usr/local/bin/pullrepo
+RUN chmod +x /usr/local/bin/pullrepo
 
 RUN echo "Git repull v14"
-WORKDIR /app/apps_mapyourgrid
-RUN git pull
-WORKDIR /app/osm-power-grid-map-analysis
-RUN git pull
-WORKDIR /app/lib/filorion
-RUN git pull
+RUN pullrepo
 
 WORKDIR /app
 # Par défaut, lance un shell python interactif

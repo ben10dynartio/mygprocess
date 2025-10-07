@@ -3,12 +3,18 @@ MapYourGrid Toolbox for managing grid analysis
 """
 
 import argparse
+import os
 import subprocess
 from filorion import MinioFileStorage
 
-fileclient = MinioFileStorage(bucket_name="mapyourgrid", endpoint="myg-minio:9000",
-                              access_key="AKYGhrfree6687", secret_key="hirfiecbreverehidbz9863894gbjdeok", secure=False)
+MINIO_SECRETKEY_FILE = os.environ.get("MINIO_SECRETKEY_FILE")
+with open(MINIO_SECRETKEY_FILE, "r") as f:
+    MINIO_SECRETKEY = f.read().strip()  # strip() pour enlever le \n final
+MINIO_ACCESSKEY = os.environ.get("MINIO_ACCESSKEY")
 
+fileclient = MinioFileStorage(bucket_name="mapyourgrid", endpoint="myg-minio:9000",
+                              access_key=MINIO_ACCESSKEY, secret_key=MINIO_SECRETKEY, secure=False)
+print("acces with", MINIO_ACCESSKEY, MINIO_SECRETKEY)
 def push_country_files_to_minio(country):
     print(f"> Starting pushing files to minio ({args.country})")
     if country:
@@ -92,8 +98,6 @@ if args.action == "voltageoperator":
 if args.action == "processcountry":
     if not args.country:
         raise AttributeError("No country indicated")
-    with open("logs/log_v2.txt", "w") as fichier:
-        fichier.write("== Processing : " + args.country)
     try:
         subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {args.country} -d", shell=True, check=True)
         subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {args.country} -g", shell=True, check=True)
@@ -109,6 +113,7 @@ if args.action == "processcountry":
         with open("logs/log_v1.txt", "w") as fichier:
             fichier.write("Got Error =====\n")
             fichier.write(str(e))
+        raise e
 
 if args.action == "mergeworld":
     subprocess.run(f"python apps_mapyourgrid/merge_world/run.py qgstats", shell=True)
