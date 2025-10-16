@@ -43,7 +43,7 @@ def push_country_files_to_minio(country):
         ]:
             fileclient.push_file(f"osm-power-grid-map-analysis/data/{country}/{filename}",
                                  f"data-countries/{country}/{filename}")
-        fileclient.push_file(f"apps_mapyourgrid/errors_compile/{country}/{country}_list_errors.json",
+        fileclient.push_file(f"apps_mapyourgrid/data_out/errors_compile/{country}/{country}_list_errors.json",
                                  f"data-countries/{country}/{country}_list_errors.json")
     else:
         raise ValueError("A country is required")
