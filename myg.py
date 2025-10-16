@@ -14,7 +14,21 @@ MINIO_ACCESSKEY = os.environ.get("MINIO_ACCESSKEY")
 
 fileclient = MinioFileStorage(bucket_name="mapyourgrid", endpoint="myg-minio:9000",
                               access_key=MINIO_ACCESSKEY, secret_key=MINIO_SECRETKEY, secure=False)
-print("acces with", MINIO_ACCESSKEY, MINIO_SECRETKEY)
+
+LIST_COUNTRY_CODES = ["AF", "AL", "DZ", "AD", "AO", "AG", "AR", "AM", "AU", "AT", "AZ", "BH", "BD", "BB", "BY", "BE",
+                      "BZ", "BJ", "BT", "BO", "BA", "BW", "BR", "BN", "BG", "BF", "BI", "KH", "CM", "CA", "CV", "CF",
+                      "TD", "CL", "CO", "KM", "CR", "HR", "CU", "CY", "CZ", "CD", "DK", "DJ", "DM", "DO", "EC", "EG",
+                      "SV", "GQ", "ER", "EE", "SZ", "ET", "FM", "FJ", "FI", "FR", "GA", "GE", "DE", "GH", "GR", "GD",
+                      "GT", "GN", "GW", "GY", "HT", "HN", "HU", "IS", "IN", "ID", "IR", "IQ", "IE", "IL", "IT", "CI",
+                      "JM", "JP", "JO", "KZ", "KE", "NL", "KI", "KW", "KG", "LA", "LV", "LB", "LS", "LR", "LY", "LI",
+                      "LT", "LU", "MG", "MW", "MY", "MV", "ML", "MT", "MH", "MR", "MU", "MX", "MD", "MC", "MN", "ME",
+                      "MA", "MZ", "MM", "NA", "NR", "NP", "NZ", "NI", "NE", "NG", "KP", "MK", "NO", "OM", "PK", "PW",
+                      "PA", "PG", "PY", "CN", "PE", "PH", "PL", "PT", "QA", "CG", "RO", "RU", "RW", "KN", "LC", "VC",
+                      "WS", "SM", "SA", "SN", "RS", "SC", "SL", "SG", "SK", "SI", "SB", "SO", "ZA", "KR", "SS", "ES",
+                      "LK", "PS", "SD", "SR", "SE", "CH", "SY", "ST", "TW", "TJ", "TZ", "TH", "BS", "GM", "TL", "TG",
+                      "TO", "TT", "TN", "TR", "TM", "TV", "UG", "UA", "AE", "GB", "US", "UY", "UZ", "VU", "VA", "VE",
+                      "VN", "YE", "ZM", "ZW"]
+
 def push_country_files_to_minio(country):
     print(f"> Starting pushing files to minio ({args.country})")
     if country:
@@ -29,6 +43,8 @@ def push_country_files_to_minio(country):
         ]:
             fileclient.push_file(f"osm-power-grid-map-analysis/data/{country}/{filename}",
                                  f"data-countries/{country}/{filename}")
+        fileclient.push_file(f"apps_mapyourgrid/errors_compile/{country}/{country}_list_errors.json",
+                                 f"data-countries/{country}/{country}_list_errors.json")
     else:
         raise ValueError("A country is required")
 
@@ -37,9 +53,27 @@ def push_worldwide_files_to_minio():
     for filename in [
         "worldmap_indicators.geojson",
         "voltage_operator.csv",
+        "list_osm_errors.json",
     ]:
         fileclient.push_file(f"apps_mapyourgrid/data_out/00_WORLD/{filename}",
                              f"data-worldwide/{filename}")
+
+def subprocess_country(country):
+    try:
+        subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {country} -d", shell=True, check=True)
+        subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {country} -g", shell=True, check=True)
+        subprocess.run(f"python apps_mapyourgrid/quality_grid_stats/run.py osmose {country}", shell=True, check=True)
+        subprocess.run(f"python apps_mapyourgrid/quality_grid_stats/run.py qgstats {country}", shell=True, check=True)
+        subprocess.run(f"python apps_mapyourgrid/spatial_analysis/run.py geoclip {country}", shell=True, check=True)
+        subprocess.run(f"python apps_mapyourgrid/spatial_analysis/run.py geoanalysis {country}", shell=True,
+                       check=True)
+        subprocess.run(f"python apps_mapyourgrid/voltage_operator_analysis/run.py voltageoperator {country}",
+                       shell=True, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Country error {country} The process has unexpectly ended")
+        with open(f"logs/log_{args.country}.txt", "w") as file:
+            file.write("Got Error =====\n")
+            file.write(str(e))
 
 parser = argparse.ArgumentParser()
 parser.add_argument("action", help="Action to process")
@@ -98,22 +132,11 @@ if args.action == "voltageoperator":
 if args.action == "processcountry":
     if not args.country:
         raise AttributeError("No country indicated")
-    try:
-        subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {args.country} -d", shell=True, check=True)
-        subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {args.country} -g", shell=True, check=True)
-        subprocess.run(f"python apps_mapyourgrid/quality_grid_stats/run.py osmose {args.country}", shell=True, check=True)
-        subprocess.run(f"python apps_mapyourgrid/quality_grid_stats/run.py qgstats {args.country}", shell=True, check=True)
-        subprocess.run(f"python apps_mapyourgrid/spatial_analysis/run.py geoclip {args.country}", shell=True, check=True)
-        subprocess.run(f"python apps_mapyourgrid/spatial_analysis/run.py geoanalysis {args.country}", shell=True, check=True)
-        subprocess.run(f"python apps_mapyourgrid/voltage_operator_analysis/run.py voltageoperator {args.country}",
-                       shell=True, check=True)
-    except subprocess.CalledProcessError as e:
-        print("The process has unexpectly ended")
-        # Ouvre (ou crée) un fichier en mode écriture
-        with open("logs/log_v1.txt", "w") as fichier:
-            fichier.write("Got Error =====\n")
-            fichier.write(str(e))
-        raise e
+    subprocess_country(args.country)
+
+if args.action == "processworld":
+    for country in LIST_COUNTRY_CODES:
+        subprocess_country(country)
 
 if args.action == "mergeworld":
     subprocess.run(f"python apps_mapyourgrid/merge_world/run.py qgstats", shell=True)
@@ -121,6 +144,7 @@ if args.action == "mergeworld":
     subprocess.run(f"python apps_mapyourgrid/merge_world/run.py spatialanalysis", shell=True)
     subprocess.run(f"python apps_mapyourgrid/merge_world/run.py voltageoperator", shell=True)
     subprocess.run(f"python apps_mapyourgrid/merge_world/run.py buildworldmap", shell=True)
+    subprocess.run(f"python apps_mapyourgrid/merge_world/run.py gathererrors", shell=True)
 
 if args.action == "wikidata":
     subprocess.run(f"python apps_mapyourgrid/osmwiki/run.py wikidata", shell=True)
