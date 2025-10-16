@@ -146,6 +146,9 @@ if args.action == "mergeworld":
     subprocess.run(f"python apps_mapyourgrid/merge_world/run.py buildworldmap", shell=True)
     subprocess.run(f"python apps_mapyourgrid/merge_world/run.py gathererrors", shell=True)
 
+if args.action == "gathererrors":
+    subprocess.run(f"python apps_mapyourgrid/merge_world/run.py gathererrors", shell=True)
+
 if args.action == "wikidata":
     subprocess.run(f"python apps_mapyourgrid/osmwiki/run.py wikidata", shell=True)
 
