@@ -31,32 +31,31 @@ LIST_COUNTRY_CODES = ["AF", "AL", "DZ", "AD", "AO", "AG", "AR", "AM", "AU", "AT"
 
 def push_country_files_to_minio(country):
     print(f"> Starting pushing files to minio ({args.country})")
-    if country:
-        for filename in [
-            "osm_clean_power_substation.gpkg",
-            "osm_brut_power_line.gpkg",
-            "osm_brut_power_line.gpkg",
-            "post_graph_power_nodes.gpkg",
-            "post_graph_power_nodes_circuit.gpkg",
-            "post_graph_power_lines.gpkg",
-            "post_graph_power_lines_circuit.gpkg",
-        ]:
+
+    for filename in [
+        "osm_clean_power_substation.gpkg",
+        "osm_brut_power_line.gpkg",
+        "osm_brut_power_line.gpkg",
+        "post_graph_power_nodes.gpkg",
+        "post_graph_power_nodes_circuit.gpkg",
+        "post_graph_power_lines.gpkg",
+        "post_graph_power_lines_circuit.gpkg",
+    ]:
+        try:
             fileclient.push_file(f"osm-power-grid-map-analysis/data/{country}/{filename}",
                                  f"data-countries/{country}/{filename}")
+        except Exception as e:
+            print("** ERROR when pushing file =", filename)
+            print(e)
+    try:
         fileclient.push_file(f"apps_mapyourgrid/data_out/errors_compile/{country}/{country}_list_errors.json",
                                  f"data-countries/{country}/{country}_list_errors.json")
-    else:
-        raise ValueError("A country is required")
+    except Exception as e:
+        print(f"** ERROR when pushing file {country}_list_errors.json")
+        print(e)
 
-def push_worldwide_files_to_minio():
-    print(f"> Starting pushing files to minio (worldwide)")
-    for filename in [
-        "worldmap_indicators.geojson",
-        "voltage_operator.csv",
-        "list_osm_errors.json",
-    ]:
-        fileclient.push_file(f"apps_mapyourgrid/data_out/00_WORLD/{filename}",
-                             f"data-worldwide/{filename}")
+
+
 
 def subprocess_country(country):
     try:
@@ -75,6 +74,59 @@ def subprocess_country(country):
             file.write("Got Error =====\n")
             file.write(str(e))
 
+############## ACTIONS
+
+def mergeworld():
+    subprocess.run(f"python apps_mapyourgrid/merge_world/run.py qgstats", shell=True)
+    subprocess.run(f"python apps_mapyourgrid/merge_world/run.py osmwiki", shell=True)
+    subprocess.run(f"python apps_mapyourgrid/merge_world/run.py spatialanalysis", shell=True)
+    subprocess.run(f"python apps_mapyourgrid/merge_world/run.py voltageoperator", shell=True)
+    subprocess.run(f"python apps_mapyourgrid/merge_world/run.py buildworldmap", shell=True)
+    gathererrors()
+
+
+def gathererrors():
+    subprocess.run(f"python apps_mapyourgrid/merge_world/run.py gathererrors", shell=True)
+
+
+def osmwiki():
+    subprocess.run(f"python apps_mapyourgrid/osmwiki/run.py osmwiki", shell=True)
+
+
+def processworld():
+    for mycountry in LIST_COUNTRY_CODES:
+        subprocess_country(mycountry)
+
+
+def pushminiocountries():
+    for country in LIST_COUNTRY_CODES:
+        push_country_files_to_minio(country)
+
+
+def pushminioworld():
+    print(f"> Starting pushing files to minio (worldwide)")
+    for filename in [
+        "worldmap_indicators.geojson",
+        "voltage_operator.csv",
+        "list_osm_errors.json",
+        "openinframap_countries_info_brut.csv",
+        "openinframap_countries_info_lua.txt",
+        "wikidata_countries_info_formatted.csv",
+        "wikidata_countries_info_brut.csv",
+        "wikidata_countries_info_lua.txt",
+    ]:
+        fileclient.push_file(f"apps_mapyourgrid/data_out/00_WORLD/{filename}",
+                             f"data-worldwide/{filename}")
+
+def fullupdate():
+    osmwiki()
+    processworld()
+    mergeworld()
+    pushminiocountries()
+    pushminioworld()
+
+############## SCRIPTS ARGUMENT
+
 parser = argparse.ArgumentParser()
 parser.add_argument("action", help="Action to process")
 parser.add_argument("country", help="Country code iso a2")
@@ -91,8 +143,11 @@ if args.action == "pushminiocountry":
         raise AttributeError("No country indicated")
     push_country_files_to_minio(args.country)
 
+if args.action == "pushminiocountries":
+    pushminiocountries()
+
 if args.action == "pushminioworld":
-    push_worldwide_files_to_minio()
+    pushminioworld()
 
 if args.action == "overpass":
     if not args.country:
@@ -135,19 +190,13 @@ if args.action == "processcountry":
     subprocess_country(args.country)
 
 if args.action == "processworld":
-    for country in LIST_COUNTRY_CODES:
-        subprocess_country(country)
+    processworld()
 
 if args.action == "mergeworld":
-    subprocess.run(f"python apps_mapyourgrid/merge_world/run.py qgstats", shell=True)
-    subprocess.run(f"python apps_mapyourgrid/merge_world/run.py osmwiki", shell=True)
-    subprocess.run(f"python apps_mapyourgrid/merge_world/run.py spatialanalysis", shell=True)
-    subprocess.run(f"python apps_mapyourgrid/merge_world/run.py voltageoperator", shell=True)
-    subprocess.run(f"python apps_mapyourgrid/merge_world/run.py buildworldmap", shell=True)
-    subprocess.run(f"python apps_mapyourgrid/merge_world/run.py gathererrors", shell=True)
+    mergeworld()
 
 if args.action == "gathererrors":
-    subprocess.run(f"python apps_mapyourgrid/merge_world/run.py gathererrors", shell=True)
+    gathererrors()
 
 if args.action == "wikidata":
     subprocess.run(f"python apps_mapyourgrid/osmwiki/run.py wikidata", shell=True)
@@ -156,5 +205,8 @@ if args.action == "openinframap":
     subprocess.run(f"python apps_mapyourgrid/osmwiki/run.py openinframap", shell=True)
 
 if args.action == "osmwiki":
-    subprocess.run(f"python apps_mapyourgrid/osmwiki/run.py wikidata", shell=True)
-    subprocess.run(f"python apps_mapyourgrid/osmwiki/run.py openinframap", shell=True)
+    osmwiki()
+
+if args.action == "fullupdate":
+    fullupdate()
+
