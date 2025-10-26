@@ -37,3 +37,11 @@ else
 fi
 echo ">>>> End of initialisation of Minio Bucket and key"
 wait
+
+# mc alias set myminio http://<serveur>:9000 <ACCESS_KEY> <SECRET_KEY>
+# mc anonymous set-json cors.json myminio/<bucket>
+# OU BIEN
+# mc cors set myminio/<bucket> cors.json
+# mc cors set mygfiles/mapyourgrid cors.json
+# TEST
+# mc cors info myminio/<bucket>

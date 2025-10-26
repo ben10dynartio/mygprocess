@@ -55,8 +55,6 @@ def push_country_files_to_minio(country):
         print(e)
 
 
-
-
 def subprocess_country(country):
     try:
         subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {country} -d", shell=True, check=True)
@@ -68,6 +66,7 @@ def subprocess_country(country):
                        check=True)
         subprocess.run(f"python apps_mapyourgrid/voltage_operator_analysis/run.py voltageoperator {country}",
                        shell=True, check=True)
+        subprocess.run(f"python apps_mapyourgrid/circuit_length/run.py circuitlength {args.country}", shell=True)
     except subprocess.CalledProcessError as e:
         print(f"Country error {country} The process has unexpectly ended")
         with open(f"logs/log_{args.country}.txt", "w") as file:
@@ -168,6 +167,11 @@ if args.action == "qgstats":
     if not args.country:
         raise AttributeError("No country indicated")
     subprocess.run(f"python apps_mapyourgrid/quality_grid_stats/run.py qgstats {args.country}", shell=True)
+
+if args.action == "circuitlength":
+    if not args.country:
+        raise AttributeError("No country indicated")
+    subprocess.run(f"python apps_mapyourgrid/circuit_length/run.py circuitlength {args.country}", shell=True)
 
 if args.action == "geoclip":
     if not args.country:
