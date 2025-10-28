@@ -29,7 +29,7 @@ LIST_COUNTRY_CODES = ["AF", "AL", "DZ", "AD", "AO", "AG", "AR", "AM", "AU", "AT"
                       "TO", "TT", "TN", "TR", "TM", "TV", "UG", "UA", "AE", "GB", "US", "UY", "UZ", "VU", "VA", "VE",
                       "VN", "YE", "ZM", "ZW"]
 
-def push_country_files_to_minio(country):
+def pushminiocountry(country):
     print(f"> Starting pushing files to minio ({args.country})")
 
     for filename in [
@@ -99,7 +99,7 @@ def processworld():
 
 def pushminiocountries():
     for country in LIST_COUNTRY_CODES:
-        push_country_files_to_minio(country)
+        pushminiocountry(country)
 
 
 def pushminioworld():
@@ -117,12 +117,21 @@ def pushminioworld():
         fileclient.push_file(f"apps_mapyourgrid/data_out/00_WORLD/{filename}",
                              f"data-worldwide/{filename}")
 
+
 def fullupdate():
     osmwiki()
     processworld()
     mergeworld()
     pushminiocountries()
     pushminioworld()
+
+
+def updatecountry(country):
+    subprocess_country(country)
+    mergeworld()
+    pushminiocountry(country)
+    pushminioworld()
+
 
 ############## SCRIPTS ARGUMENT
 
@@ -140,7 +149,7 @@ if (not d) & (not g):
 if args.action == "pushminiocountry":
     if not args.country:
         raise AttributeError("No country indicated")
-    push_country_files_to_minio(args.country)
+    pushminiocountry(args.country)
 
 if args.action == "pushminiocountries":
     pushminiocountries()
@@ -213,4 +222,9 @@ if args.action == "osmwiki":
 
 if args.action == "fullupdate":
     fullupdate()
+
+if args.action == "updatecountry":
+    if not args.country:
+        raise AttributeError("No country indicated")
+    updatecountry(args.country)
 
