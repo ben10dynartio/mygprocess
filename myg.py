@@ -81,6 +81,7 @@ def mergeworld():
     subprocess.run(f"python apps_mapyourgrid/merge_world/run.py spatialanalysis", shell=True)
     subprocess.run(f"python apps_mapyourgrid/merge_world/run.py voltageoperator", shell=True)
     subprocess.run(f"python apps_mapyourgrid/merge_world/run.py buildworldmap", shell=True)
+    subprocess.run(f"python apps_mapyourgrid/merge_world/run.py circuitlength", shell=True)
     gathererrors()
 
 
