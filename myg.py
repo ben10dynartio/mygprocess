@@ -66,10 +66,10 @@ def subprocess_country(country):
                        check=True)
         subprocess.run(f"python apps_mapyourgrid/voltage_operator_analysis/run.py voltageoperator {country}",
                        shell=True, check=True)
-        subprocess.run(f"python apps_mapyourgrid/circuit_length/run.py circuitlength {args.country}", shell=True)
+        subprocess.run(f"python apps_mapyourgrid/circuit_length/run.py circuitlength {country}", shell=True, check=True)
     except subprocess.CalledProcessError as e:
         print(f"Country error {country} The process has unexpectly ended")
-        with open(f"logs/log_{args.country}.txt", "w") as file:
+        with open(f"logs/log_{country}.txt", "w") as file:
             file.write("Got Error =====\n")
             file.write(str(e))
 
