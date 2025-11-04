@@ -33,6 +33,9 @@ RUN pip install -r osm-power-grid-map-analysis/scripts/requirements.txt
 RUN pip install -r apps_mapyourgrid/requirements.txt
 RUN pip install -r lib/filorion/requirements.txt
 
+# Get and copy release data
+COPY ./services/pyscripts/get_releasedata.sh .
+RUN sh get_releasedata.sh
 COPY ./releasedata/kontur/ ./apps_mapyourgrid/spatial_analysis/data_kontur
 
 COPY ./services/pyscripts/pullrepo.sh /usr/local/bin/pullrepo
@@ -43,4 +46,4 @@ RUN pullrepo
 
 WORKDIR /app
 # Par défaut, lance un shell python interactif
-CMD ["python3"]
+# CMD ["python3"]

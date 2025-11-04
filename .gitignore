@@ -2,8 +2,9 @@
 multipass/*
 releasedata/*
 docs-private/*
+logs/*
 
-#filorion
+filorion
 releasedata.zip*
 
 # Byte-compiled / optimized / DLL files
