@@ -77,16 +77,21 @@ def subprocess_country(country):
 
 def mergeworld():
     subprocess.run(f"python apps_mapyourgrid/merge_world/run.py qgstats", shell=True)
-    subprocess.run(f"python apps_mapyourgrid/merge_world/run.py osmwiki", shell=True)
+    #subprocess.run(f"python apps_mapyourgrid/merge_world/run.py osmwiki", shell=True)
     subprocess.run(f"python apps_mapyourgrid/merge_world/run.py spatialanalysis", shell=True)
     subprocess.run(f"python apps_mapyourgrid/merge_world/run.py voltageoperator", shell=True)
     subprocess.run(f"python apps_mapyourgrid/merge_world/run.py circuitlength", shell=True)
     subprocess.run(f"python apps_mapyourgrid/merge_world/run.py buildworldmap", shell=True)
+    countrypages()
     gathererrors()
 
 
 def gathererrors():
     subprocess.run(f"python apps_mapyourgrid/merge_world/run.py gathererrors", shell=True)
+
+
+def countrypages():
+    subprocess.run(f"python apps_mapyourgrid/merge_world/run.py countrypages", shell=True)
 
 
 def osmwiki():
@@ -228,4 +233,7 @@ if args.action == "updatecountry":
     if not args.country:
         raise AttributeError("No country indicated")
     updatecountry(args.country)
+
+if args.action == "countrypages":
+    countrypages()
 
