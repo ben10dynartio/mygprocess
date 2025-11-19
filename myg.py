@@ -57,7 +57,8 @@ def pushminiocountry(country):
 
 def subprocess_country(country):
     try:
-        subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {country} -d", shell=True, check=True)
+        if not nd:
+            subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {country} -d", shell=True, check=True)
         subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {country} -g", shell=True, check=True)
         subprocess.run(f"python apps_mapyourgrid/quality_grid_stats/run.py osmose {country}", shell=True, check=True)
         subprocess.run(f"python apps_mapyourgrid/quality_grid_stats/run.py qgstats {country}", shell=True, check=True)
@@ -146,9 +147,10 @@ parser.add_argument("action", help="Action to process")
 parser.add_argument("country", help="Country code iso a2")
 parser.add_argument("-d", "--download", action="store_true", help="Download only")
 parser.add_argument("-g", "--graph", action="store_true", help="Graph analysis only")
+parser.add_argument("-nd", "--nodownload", action="store_true", help="No download")
 args = parser.parse_args()
 
-d, g = args.download, args.graph
+d, g, nd = args.download, args.graph, args.nodownload
 if (not d) & (not g):
     d, g = True, True
 
