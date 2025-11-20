@@ -39,7 +39,6 @@ def pushminiocountry(country):
 
 
     for filename in [
-        "osm_clean_power_substation.gpkg",
         "osm_brut_power_line.gpkg",
         "osm_brut_power_line.gpkg",
         "post_graph_power_nodes.gpkg",
@@ -55,10 +54,14 @@ def pushminiocountry(country):
             print(e)
 
     files = [
+        (GRID_PATH / f"{country}/osm_clean_power_substation.gpkg",
+         f"data-countries/{country}/osm_clean_power_substation.gpkg"),
         (APPS_PATH / f"errors_compile/{country}/{country}_list_errors.json",
          f"data-countries/{country}/{country}_list_errors.json"),
         (APPS_PATH / f"transmission_layer/{country}_osm_transmission_grid.gpkg",
          f"data-countries/{country}/{country}_osm_transmission_grid.gpkg"),
+        (APPS_PATH / f"transmission_layer/{country}_osm_transmission_grid.geojson",
+         f"data-countries/{country}/{country}_osm_transmission_grid.geojson"),
     ]
 
     for source_file, dest_file in files:
