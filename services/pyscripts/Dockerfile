@@ -11,8 +11,6 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     bash \
     bash-completion \
-    less \
-    vim \
     && rm -rf /var/lib/apt/lists/*
 
 # Utiliser bash comme shell par défaut
@@ -44,6 +42,7 @@ RUN chmod +x /usr/local/bin/pullrepo
 RUN echo "Git repull v14"
 RUN pullrepo
 
+WORKDIR /app/apps_mapyourgrid/
+RUN ln -s ../databox/ data_out/
+
 WORKDIR /app
-# Par défaut, lance un shell python interactif
-# CMD ["python3"]

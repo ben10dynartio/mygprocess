@@ -99,6 +99,10 @@ def mergeworld():
     subprocess.run(f"python apps_mapyourgrid/merge_world/run.py spatialanalysis", shell=True)
     subprocess.run(f"python apps_mapyourgrid/merge_world/run.py voltageoperator", shell=True)
     subprocess.run(f"python apps_mapyourgrid/merge_world/run.py circuitlength", shell=True)
+
+    subprocess.run(f"python apps_mapyourgrid/circuit_length/run.py formatcircuitlengthofficial", shell=True)
+    subprocess.run(f"python apps_mapyourgrid/circuit_length/run.py circuitlengthworldcomparison", shell=True)
+
     subprocess.run(f"python apps_mapyourgrid/merge_world/run.py buildworldmap", shell=True)
     countrypages()
     gathererrors()
