@@ -60,15 +60,13 @@ def pushminiocountry(country):
          f"data-countries/{country}/{country}_list_errors.json"),
         (APPS_PATH / f"transmission_layer/{country}_osm_transmission_grid.gpkg",
          f"data-countries/{country}/{country}_osm_transmission_grid.gpkg"),
-        (APPS_PATH / f"transmission_layer/{country}_osm_transmission_grid.geojson",
-         f"data-countries/{country}/{country}_osm_transmission_grid.geojson"),
     ]
 
     for source_file, dest_file in files:
         try:
             fileclient.push_file(str(source_file), str(dest_file))
         except Exception as e:
-            print(f"** ERROR when pushing file {country}_list_errors.json")
+            print(f"** ERROR when pushing file :")
             print(e)
 
 
