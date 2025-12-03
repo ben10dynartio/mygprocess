@@ -20,9 +20,8 @@ services:
       - ./logs/:/app/logs/
       - ./databox:/app/databox
     #env_file: multipass/.pyscripts-env
-    environment:
-      MINIO_ACCESSKEY: AKmapyourgrid2025
-      MINIO_SECRETKEY_FILE: /run/secrets/minio_secret_key
+    env_file:
+      - multipass/.env.pyscripts
     secrets:
       - minio_secret_key
     stdin_open: true   # Permet d'utiliser un shell interactif
