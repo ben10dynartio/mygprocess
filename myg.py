@@ -139,13 +139,19 @@ def pushminioworld():
         "wikidata_countries_info_formatted.csv",
         "wikidata_countries_info_brut.csv",
         "wikidata_countries_info_lua.txt",
+        "awesomelist.csv"
     ]:
         fileclient.push_file(f"apps_mapyourgrid/data_out/00_WORLD/{filename}",
                              f"data-worldwide/{filename}")
 
+def crosscheckdatasources():
+    subprocess.run(f"python apps_mapyourgrid/crosscheck_data_sources/run.py extractawesomelist", shell=True)
+    #subprocess.run(f"python apps_mapyourgrid/crosscheck_data_sources/run.py extractwiki", shell=True)
+    # subprocess.run(f"python apps_mapyourgrid/crosscheck_data_sources/run.py conflatedatesources", shell=True)
 
 def fullupdate():
     osmwiki()
+    crosscheckdatasources()
     processworld()
     mergeworld()
     pushminiocountries()
@@ -257,4 +263,7 @@ if args.action == "updatecountry":
 
 if args.action == "countrypages":
     countrypages()
+
+if args.action == "crosscheckdatasources":
+    crosscheckdatasources()
 
