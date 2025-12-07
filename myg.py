@@ -58,6 +58,8 @@ def pushminiocountry(country):
          f"data-countries/{country}/osm_clean_power_substation.gpkg"),
         (APPS_PATH / f"errors_compile/{country}/{country}_list_errors.json",
          f"data-countries/{country}/{country}_list_errors.json"),
+        (APPS_PATH / f"errors_compile/{country}/{country}_list_errors.js",
+         f"data-countries/{country}/{country}_list_errors.js"),
         (APPS_PATH / f"transmission_layer/{country}_osm_transmission_grid.gpkg",
          f"data-countries/{country}/{country}_osm_transmission_grid.gpkg"),
     ]
