@@ -4,6 +4,8 @@ multipass/*
 releasedata/*
 docs-private/*
 logs/*
+databox/*
+!databox/README.md
 
 filorion
 releasedata.zip*

@@ -34,7 +34,7 @@ LIST_COUNTRY_CODES = ["AF", "AL", "DZ", "AD", "AO", "AG", "AR", "AM", "AU", "AT"
 def pushminiocountry(country):
     print(f"> Starting pushing files to minio ({country})")
 
-    GRID_PATH = Path("osm-power-grid-map-analysis/data/")
+    GRID_PATH = Path("databox/shapes/")
     APPS_PATH = Path("apps_mapyourgrid/data_out/")
 
 
@@ -47,7 +47,7 @@ def pushminiocountry(country):
         "post_graph_power_lines_circuit.gpkg",
     ]:
         try:
-            fileclient.push_file(f"osm-power-grid-map-analysis/data/{country}/{filename}",
+            fileclient.push_file(f"databox/shapes/{country}/{filename}",
                                  f"data-countries/{country}/{filename}")
         except Exception as e:
             print("** ERROR when pushing file =", filename)
@@ -268,4 +268,12 @@ if args.action == "countrypages":
 
 if args.action == "crosscheckdatasources":
     crosscheckdatasources()
+
+if args.action == "qgismap":
+    subprocess.run(f"python3 osm-power-grid-map-analysis/qgis/standalone-automation.py", shell=True)
+
+if args.action == "qgismapcountry":
+    if not args.country:
+        raise AttributeError("No country indicated")
+    subprocess.run(f"python3 osm-power-grid-map-analysis/qgis/standalone-automation.py {args.country}", shell=True)
 

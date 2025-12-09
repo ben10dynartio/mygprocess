@@ -24,8 +24,26 @@ services:
       - multipass/.env.pyscripts
     secrets:
       - minio_secret_key
-    stdin_open: true   # Permet d'utiliser un shell interactif
-    tty: true          # Garde le terminal attaché
+    stdin_open: true   # Interactive shell
+    tty: true          # Keep terminal attached
+
+  qgis:
+    container_name: myg-qgis
+    build:
+      context: ./
+      dockerfile: services/qgis/Dockerfile
+    volumes:
+    #  - ./releasedata/:/app/releasedata/
+    #  - ./logs/:/app/logs/
+      - ./myg.py:/app/myg.py
+      - ./databox:/app/databox
+    #env_file: multipass/.pyscripts-env
+    env_file:
+      - multipass/.env.pyscripts
+    secrets:
+      - minio_secret_key
+    stdin_open: true   # Interactive shell
+    tty: true          # Keep terminal attached
 
   minio:
     container_name: myg-minio
