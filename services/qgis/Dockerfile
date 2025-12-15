@@ -11,6 +11,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     bash \
     bash-completion \
+    nano \
     && rm -rf /var/lib/apt/lists/*
 
 # Utiliser bash comme shell par défaut

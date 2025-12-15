@@ -74,9 +74,11 @@ def pushminiocountry(country):
 
 def subprocess_country(country):
     try:
+        subprocess.run(f"python apps_mapyourgrid/podoma/run.py layerbuild ln -c {country}", shell=True, check=True)
+        subprocess.run(f"python apps_mapyourgrid/podoma/run.py layerbuild sub -c {country}", shell=True, check=True)
         if not nd:
             subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {country} -d", shell=True, check=True)
-        subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {country} -g", shell=True, check=True)
+        subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {country} -g -s podoma", shell=True, check=True)
         subprocess.run(f"python apps_mapyourgrid/quality_grid_stats/run.py osmose {country}", shell=True, check=True)
         subprocess.run(f"python apps_mapyourgrid/quality_grid_stats/run.py qgstats {country}", shell=True, check=True)
         subprocess.run(f"python apps_mapyourgrid/spatial_analysis/run.py geoclip {country}", shell=True, check=True)
@@ -175,6 +177,7 @@ parser.add_argument("country", help="Country code iso a2")
 parser.add_argument("-d", "--download", action="store_true", help="Download only")
 parser.add_argument("-g", "--graph", action="store_true", help="Graph analysis only")
 parser.add_argument("-nd", "--nodownload", action="store_true", help="No download")
+parser.add_argument("-s", "--source", action="store_true", help="Source")
 args = parser.parse_args()
 
 d, g, nd = args.download, args.graph, args.nodownload
