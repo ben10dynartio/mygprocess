@@ -20,7 +20,7 @@ SHELL ["/bin/bash", "-c"]
 # (Optionnel) Met à jour pip
 RUN pip install --no-cache-dir --upgrade pip
 
-RUN echo "Processing git cloning v4"
+RUN echo "Processing git cloning v5efa0976fag"
 RUN git clone https://github.com/ben10dynartio/apps_mapyourgrid.git
 RUN git clone https://github.com/ben10dynartio/osm-power-grid-map-analysis.git
 
@@ -48,10 +48,5 @@ RUN ln -s ../databox/ data_out
 
 WORKDIR /app/osm-power-grid-map-analysis/
 RUN ln -s ../databox/ databox
-WORKDIR /app/databox/
-RUN mkdir shapes
-WORKDIR /app/osm-power-grid-map-analysis/
-RUN mv data/BO/ databox/shapes/BO/
-RUN mv data/NP/ databox/shapes/NP/
 
 WORKDIR /app
