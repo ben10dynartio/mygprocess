@@ -16,7 +16,7 @@ services:
       dockerfile: services/pyscripts/Dockerfile
     volumes:
       - ./myg.py:/app/myg.py
-      - ./releasedata/:/app/releasedata/
+    #./releasedata/:/app/releasedata/
       - ./logs/:/app/logs/
       - ./databox:/app/databox
     #env_file: multipass/.pyscripts-env
