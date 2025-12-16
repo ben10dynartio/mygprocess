@@ -35,7 +35,7 @@ def pushminiocountry(country):
     print(f"> Starting pushing files to minio ({country})")
 
     GRID_PATH = Path("databox/shapes/")
-    APPS_PATH = Path("apps_mapyourgrid/data_out/")
+    APPS_PATH = Path("apps_mapyourgrid/databox/")
 
 
     for filename in [
