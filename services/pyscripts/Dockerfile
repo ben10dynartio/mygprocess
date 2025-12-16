@@ -44,7 +44,7 @@ RUN echo "Git repull v14"
 RUN pullrepo
 
 WORKDIR /app/apps_mapyourgrid/
-RUN ln -s ../databox/ data_out
+RUN ln -s ../databox/ databox
 
 WORKDIR /app/osm-power-grid-map-analysis/
 RUN ln -s ../databox/ databox
