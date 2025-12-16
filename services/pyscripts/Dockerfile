@@ -1,4 +1,4 @@
-FROM python:3.13
+FROM python:3.14
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -35,7 +35,7 @@ RUN pip install -r lib/filorion/requirements.txt
 # Get and copy release data
 COPY ./services/pyscripts/get_releasedata.sh .
 RUN sh get_releasedata.sh
-COPY ./releasedata/kontur/ ./apps_mapyourgrid/spatial_analysis/data_kontur
+RUN mv ./releasedata/kontur/ ./apps_mapyourgrid/spatial_analysis/data_kontur
 
 COPY ./services/pyscripts/pullrepo.sh /usr/local/bin/pullrepo
 RUN chmod +x /usr/local/bin/pullrepo
