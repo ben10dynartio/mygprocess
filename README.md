@@ -32,6 +32,7 @@ For no country code, set `x` or whatever.
 
 For example :
 ```commandline
+python myg.py osmwiki x            # Get Wikidata and OpenInfraMap Data
 python myg.py fullupdate x         # Process all countries, then load to Minio
 python myg.py updatecountry BG     # Update Bulgaria data, then load to Minio
 python myg.py processworld x       # Process all countries
@@ -39,6 +40,9 @@ python myg.py processcountry TZ    # Process Tanzania
 ```
 
 Look at `myg.py` file for all available options.
+
+You can also set an alias for execution from outside docker : `alias='docker exec -it myg-pyscripts python myg.py'`
+then simply run for example `myg updatecountry BG` from shell, outside docker.
 
 ## Architecture
 The docker image, on its building will download several repositories and data.
