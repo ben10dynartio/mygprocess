@@ -155,7 +155,7 @@ def pushminioworld():
         "wikidata_countries_info_lua.txt",
         "awesomelist.csv"
     ]:
-        fileclient.push_file(f"apps_mapyourgrid/data_out/00_WORLD/{filename}",
+        fileclient.push_file(f"apps_mapyourgrid/databox/00_WORLD/{filename}",
                              f"data-worldwide/{filename}")
 
 def crosscheckdatasources():
