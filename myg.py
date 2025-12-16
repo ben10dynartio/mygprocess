@@ -84,9 +84,9 @@ def pushminiocountry(country):
 
 def subprocess_country(country):
     try:
-        subprocess.run(f"python apps_mapyourgrid/podoma/run.py layerbuild ln -c {country}", shell=True, check=True)
-        subprocess.run(f"python apps_mapyourgrid/podoma/run.py layerbuild sub -c {country}", shell=True, check=True)
         if not nd:
+            subprocess.run(f"python apps_mapyourgrid/podoma/run.py layerbuild ln -c {country}", shell=True, check=True)
+            subprocess.run(f"python apps_mapyourgrid/podoma/run.py layerbuild sub -c {country}", shell=True, check=True)
             subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {country} -d -k bc", shell=True, check=True)
         subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {country} -g -s podoma", shell=True, check=True)
         subprocess.run(f"python apps_mapyourgrid/quality_grid_stats/run.py osmose {country}", shell=True, check=True)
