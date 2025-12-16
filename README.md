@@ -12,8 +12,9 @@ This tool is build in the context of #MapYourGrid project.
 ## Set up
 
 1. Clone this repository. `git clone https://github.com/ben10dynartio/mygprocess.git`
-2. Go to the root of the repository. Build docker containers `docker compose up -d --build`
-3. (Optional) Set up CRON task if you want to process regularly
+2. Create pass file into `multipass` folder (see [Readme file](multipass/README.md))
+3. Go to the root of the repository. Build docker containers `docker compose up -d --build`
+4. (Optional) Set up CRON task if you want to process regularly
 ( `python myg.py fullupdate x` from inside the docker (not tested), 
 or `docker exec -d myg-pyscripts python myg.py fullupdate x` from outside)
 
