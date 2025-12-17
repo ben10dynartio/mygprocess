@@ -90,13 +90,13 @@ def subprocess_country(country):
             subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {country} -d -k bc", shell=True, check=True)
         subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {country} -g -s podoma", shell=True, check=True)
         subprocess.run(f"python apps_mapyourgrid/quality_grid_stats/run.py osmose {country}", shell=True, check=True)
-        subprocess.run(f"python apps_mapyourgrid/quality_grid_stats/run.py qgstats {country}", shell=True, check=True)
+        subprocess.run(f"python apps_mapyourgrid/quality_grid_stats/run.py qgstats {country} -s podoma", shell=True, check=True)
         subprocess.run(f"python apps_mapyourgrid/spatial_analysis/run.py geoclip {country}", shell=True, check=True)
         subprocess.run(f"python apps_mapyourgrid/spatial_analysis/run.py geoanalysis {country}", shell=True,
                        check=True)
-        subprocess.run(f"python apps_mapyourgrid/voltage_operator_analysis/run.py voltageoperator {country}",
+        subprocess.run(f"python apps_mapyourgrid/voltage_operator_analysis/run.py voltageoperator {country} -s podoma",
                        shell=True, check=True)
-        subprocess.run(f"python apps_mapyourgrid/circuit_length/run.py circuitlength {country}", shell=True, check=True)
+        subprocess.run(f"python apps_mapyourgrid/circuit_length/run.py circuitlength {country} -s podoma", shell=True, check=True)
     except subprocess.CalledProcessError as e:
         print(f"Country error {country} The process has unexpectly ended")
         with open(f"logs/log_{country}.txt", "w") as file:
