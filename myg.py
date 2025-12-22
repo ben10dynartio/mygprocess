@@ -35,7 +35,7 @@ def pushminiocountry(country):
     print(f"> Starting pushing files to minio ({country})")
 
     GRID_PATH = Path("databox/shapes/")
-    APPS_PATH = Path("apps_mapyourgrid/databox/")
+    APPS_PATH = Path("gridinspector/databox/")
 
 
     for filename in [
@@ -89,14 +89,14 @@ def subprocess_country(country):
             subprocess.run(f"python osm-power-grid-map-analysis/scripts/podoma_extractor/run.py layerbuild sub -c {country}", shell=True, check=True)
             subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {country} -d -k bc", shell=True, check=True)
         subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {country} -g -s podoma", shell=True, check=True)
-        subprocess.run(f"python apps_mapyourgrid/quality_grid_stats/run.py osmose {country}", shell=True, check=True)
-        subprocess.run(f"python apps_mapyourgrid/quality_grid_stats/run.py qgstats {country} -s podoma", shell=True, check=True)
-        subprocess.run(f"python apps_mapyourgrid/spatial_analysis/run.py geoclip {country}", shell=True, check=True)
-        subprocess.run(f"python apps_mapyourgrid/spatial_analysis/run.py geoanalysis {country}", shell=True,
+        subprocess.run(f"python gridinspector/quality_grid_stats/run.py osmose {country}", shell=True, check=True)
+        subprocess.run(f"python gridinspector/quality_grid_stats/run.py qgstats {country} -s podoma", shell=True, check=True)
+        subprocess.run(f"python gridinspector/spatial_analysis/run.py geoclip {country}", shell=True, check=True)
+        subprocess.run(f"python gridinspector/spatial_analysis/run.py geoanalysis {country}", shell=True,
                        check=True)
-        subprocess.run(f"python apps_mapyourgrid/voltage_operator_analysis/run.py voltageoperator {country} -s podoma",
+        subprocess.run(f"python gridinspector/voltage_operator_analysis/run.py voltageoperator {country} -s podoma",
                        shell=True, check=True)
-        subprocess.run(f"python apps_mapyourgrid/circuit_length/run.py circuitlength {country} -s podoma", shell=True, check=True)
+        subprocess.run(f"python gridinspector/circuit_length/run.py circuitlength {country} -s podoma", shell=True, check=True)
     except subprocess.CalledProcessError as e:
         print(f"Country error {country} The process has unexpectly ended")
         with open(f"logs/log_{country}.txt", "w") as file:
@@ -106,30 +106,30 @@ def subprocess_country(country):
 ############## ACTIONS
 
 def mergeworld():
-    subprocess.run(f"python apps_mapyourgrid/merge_world/run.py qgstats", shell=True)
-    #subprocess.run(f"python apps_mapyourgrid/merge_world/run.py osmwiki", shell=True)
-    subprocess.run(f"python apps_mapyourgrid/merge_world/run.py spatialanalysis", shell=True)
-    subprocess.run(f"python apps_mapyourgrid/merge_world/run.py voltageoperator", shell=True)
-    subprocess.run(f"python apps_mapyourgrid/merge_world/run.py circuitlength", shell=True)
+    subprocess.run(f"python gridinspector/merge_world/run.py qgstats", shell=True)
+    #subprocess.run(f"python gridinspector/merge_world/run.py osmwiki", shell=True)
+    subprocess.run(f"python gridinspector/merge_world/run.py spatialanalysis", shell=True)
+    subprocess.run(f"python gridinspector/merge_world/run.py voltageoperator", shell=True)
+    subprocess.run(f"python gridinspector/merge_world/run.py circuitlength", shell=True)
 
-    subprocess.run(f"python apps_mapyourgrid/circuit_length/run.py formatcircuitlengthofficial x", shell=True)
-    subprocess.run(f"python apps_mapyourgrid/circuit_length/run.py circuitlengthworldcomparison x", shell=True)
+    subprocess.run(f"python gridinspector/circuit_length/run.py formatcircuitlengthofficial x", shell=True)
+    subprocess.run(f"python gridinspector/circuit_length/run.py circuitlengthworldcomparison x", shell=True)
 
-    subprocess.run(f"python apps_mapyourgrid/merge_world/run.py buildworldmap", shell=True)
+    subprocess.run(f"python gridinspector/merge_world/run.py buildworldmap", shell=True)
     countrypages()
     gathererrors()
 
 
 def gathererrors():
-    subprocess.run(f"python apps_mapyourgrid/merge_world/run.py gathererrors", shell=True)
+    subprocess.run(f"python gridinspector/merge_world/run.py gathererrors", shell=True)
 
 
 def countrypages():
-    subprocess.run(f"python apps_mapyourgrid/merge_world/run.py countrypages", shell=True)
+    subprocess.run(f"python gridinspector/merge_world/run.py countrypages", shell=True)
 
 
 def osmwiki():
-    subprocess.run(f"python apps_mapyourgrid/osmwiki/run.py osmwiki", shell=True)
+    subprocess.run(f"python gridinspector/osmwiki/run.py osmwiki", shell=True)
 
 
 def processworld():
@@ -155,13 +155,13 @@ def pushminioworld():
         "wikidata_countries_info_lua.txt",
         "awesomelist.csv"
     ]:
-        fileclient.push_file(f"apps_mapyourgrid/databox/00_WORLD/{filename}",
+        fileclient.push_file(f"gridinspector/databox/00_WORLD/{filename}",
                              f"data-worldwide/{filename}")
 
 def crosscheckdatasources():
-    subprocess.run(f"python apps_mapyourgrid/crosscheck_data_sources/run.py extractawesomelist", shell=True)
-    #subprocess.run(f"python apps_mapyourgrid/crosscheck_data_sources/run.py extractwiki", shell=True)
-    # subprocess.run(f"python apps_mapyourgrid/crosscheck_data_sources/run.py conflatedatesources", shell=True)
+    subprocess.run(f"python gridinspector/crosscheck_data_sources/run.py extractawesomelist", shell=True)
+    #subprocess.run(f"python gridinspector/crosscheck_data_sources/run.py extractwiki", shell=True)
+    # subprocess.run(f"python gridinspector/crosscheck_data_sources/run.py conflatedatesources", shell=True)
 
 def fullupdate():
     osmwiki()
@@ -218,32 +218,32 @@ if args.action == "graphanalysis":
 if args.action == "osmose":
     if not args.country:
         raise AttributeError("No country indicated")
-    subprocess.run(f"python apps_mapyourgrid/quality_grid_stats/run.py osmose {args.country}", shell=True)
+    subprocess.run(f"python gridinspector/quality_grid_stats/run.py osmose {args.country}", shell=True)
 
 if args.action == "qgstats":
     if not args.country:
         raise AttributeError("No country indicated")
-    subprocess.run(f"python apps_mapyourgrid/quality_grid_stats/run.py qgstats {args.country}", shell=True)
+    subprocess.run(f"python gridinspector/quality_grid_stats/run.py qgstats {args.country}", shell=True)
 
 if args.action == "circuitlength":
     if not args.country:
         raise AttributeError("No country indicated")
-    subprocess.run(f"python apps_mapyourgrid/circuit_length/run.py circuitlength {args.country}", shell=True)
+    subprocess.run(f"python gridinspector/circuit_length/run.py circuitlength {args.country}", shell=True)
 
 if args.action == "geoclip":
     if not args.country:
         raise AttributeError("No country indicated")
-    subprocess.run(f"python apps_mapyourgrid/spatial_analysis/run.py geoclip {args.country}", shell=True)
+    subprocess.run(f"python gridinspector/spatial_analysis/run.py geoclip {args.country}", shell=True)
 
 if args.action == "geoanalysis":
     if not args.country:
         raise AttributeError("No country indicated")
-    subprocess.run(f"python apps_mapyourgrid/spatial_analysis/run.py geoanalysis {args.country}", shell=True)
+    subprocess.run(f"python gridinspector/spatial_analysis/run.py geoanalysis {args.country}", shell=True)
 
 if args.action == "voltageoperator":
     if not args.country:
         raise AttributeError("No country indicated")
-    subprocess.run(f"python apps_mapyourgrid/voltage_operator_analysis/run.py voltageoperator {args.country}", shell=True)
+    subprocess.run(f"python gridinspector/voltage_operator_analysis/run.py voltageoperator {args.country}", shell=True)
 
 if args.action == "processcountry":
     if not args.country:
@@ -260,10 +260,10 @@ if args.action == "gathererrors":
     gathererrors()
 
 if args.action == "wikidata":
-    subprocess.run(f"python apps_mapyourgrid/osmwiki/run.py wikidata", shell=True)
+    subprocess.run(f"python gridinspector/osmwiki/run.py wikidata", shell=True)
 
 if args.action == "openinframap":
-    subprocess.run(f"python apps_mapyourgrid/osmwiki/run.py openinframap", shell=True)
+    subprocess.run(f"python gridinspector/osmwiki/run.py openinframap", shell=True)
 
 if args.action == "osmwiki":
     osmwiki()

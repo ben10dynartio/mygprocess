@@ -3,7 +3,7 @@
 This docker image for automating quality analysis of electrical networks on OpenStreetMap.
 
 It is build to runs the python scripts in the following repositories : 
-[Apps MapYourGrid](https://github.com/ben10dynartio/apps_mapyourgrid/) &
+[GridInspector](https://github.com/ben10dynartio/gridinspector/) &
 [OSM Power Grid Map Analysis](https://github.com/ben10dynartio/osm-power-grid-map-analysis).
 
 This tool is build in the context of #MapYourGrid project. 
@@ -48,7 +48,7 @@ then simply run for example `myg updatecountry BG` from shell, outside docker.
 The docker image, on its building will download several repositories and data.
 
 **Repositories :**
-* https://github.com/ben10dynartio/apps_mapyourgrid/
+* https://github.com/ben10dynartio/gridinspector/
 * https://github.com/ben10dynartio/osm-power-grid-map-analysis
 * https://github.com/ben10dynartio/filorion (utils repository to manage Minio)
 

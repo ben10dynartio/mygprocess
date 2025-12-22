@@ -21,7 +21,7 @@ SHELL ["/bin/bash", "-c"]
 RUN pip install --no-cache-dir --upgrade pip
 
 RUN echo "Processing git cloning v5efa0976fag"
-RUN git clone https://github.com/ben10dynartio/apps_mapyourgrid.git
+RUN git clone https://github.com/ben10dynartio/gridinspector.git
 RUN git clone https://github.com/ben10dynartio/osm-power-grid-map-analysis.git
 
 WORKDIR /app/lib
@@ -29,13 +29,13 @@ RUN git clone https://github.com/ben10dynartio/filorion.git
 
 WORKDIR /app
 RUN pip install -r osm-power-grid-map-analysis/scripts/requirements.txt
-RUN pip install -r apps_mapyourgrid/requirements.txt
+RUN pip install -r gridinspector/requirements.txt
 RUN pip install -r lib/filorion/requirements.txt
 
 # Get and copy release data
 COPY ./services/pyscripts/get_releasedata.sh .
 RUN sh get_releasedata.sh
-RUN mv ./releasedata/kontur/ ./apps_mapyourgrid/spatial_analysis/data_kontur
+RUN mv ./releasedata/kontur/ ./gridinspector/spatial_analysis/data_kontur
 
 COPY ./services/pyscripts/pullrepo.sh /usr/local/bin/pullrepo
 RUN chmod +x /usr/local/bin/pullrepo
@@ -43,7 +43,7 @@ RUN chmod +x /usr/local/bin/pullrepo
 RUN echo "Git repull v14"
 RUN pullrepo
 
-WORKDIR /app/apps_mapyourgrid/
+WORKDIR /app/gridinspector/
 RUN ln -s ../databox/ databox
 
 WORKDIR /app/osm-power-grid-map-analysis/
