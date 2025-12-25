@@ -14,8 +14,9 @@ This tool is build in the context of #MapYourGrid project.
 1. Clone this repository. `git clone https://github.com/ben10dynartio/mygprocess.git`
 2. Create the password files into `multipass` folder (see [Readme file](multipass/README.md))
 3. Go to the root of the repository. Build docker containers `docker compose up -d --build`
-4. (Optional) Set up CRON task if you want to process regularly
-( `python myg.py fullupdate x` from inside the docker (not tested), 
+4. Connect myg-pyscripts docker to podoma network `docker network connect network-name-with-podoma myg-pyscripts`
+5. (Optional) Set up CRON task if you want to process regularly
+( `python myg.py fullupdate x` from inside the docker, 
 or `docker exec -d myg-pyscripts python myg.py fullupdate x` from outside)
 
    

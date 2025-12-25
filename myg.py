@@ -146,6 +146,7 @@ def pushminioworld():
     print(f"> Starting pushing files to minio (worldwide)")
     for filename in [
         "worldmap_indicators.geojson",
+        "worldmap_indicators.json",
         "voltage_operator.csv",
         "list_osm_errors.json",
         "openinframap_countries_info_brut.csv",
@@ -155,8 +156,12 @@ def pushminioworld():
         "wikidata_countries_info_lua.txt",
         "awesomelist.csv"
     ]:
-        fileclient.push_file(f"gridinspector/databox/00_WORLD/{filename}",
-                             f"data-worldwide/{filename}")
+        try:
+            fileclient.push_file(f"gridinspector/databox/00_WORLD/{filename}",
+                                 f"data-worldwide/{filename}")
+        except Exception as e:
+            print(f"** ERROR when pushing file '{filename}':")
+            print(e)
 
 def crosscheckdatasources():
     subprocess.run(f"python gridinspector/crosscheck_data_sources/run.py extractawesomelist", shell=True)
@@ -214,6 +219,9 @@ if args.action == "graphanalysis":
     if not args.country:
         raise AttributeError("No country indicated")
     subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {args.country} -g", shell=True)
+
+if args.action == "buildgraphworld":
+    subprocess.run(f"python osm-power-grid-map-analysis/scripts/gather_country_graph.py", shell=True)
 
 if args.action == "osmose":
     if not args.country:
