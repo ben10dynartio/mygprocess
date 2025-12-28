@@ -29,7 +29,7 @@ LIST_COUNTRY_CODES = ["AF", "AL", "DZ", "AD", "AO", "AG", "AR", "AM", "AU", "AT"
                       "WS", "SM", "SA", "SN", "RS", "SC", "SL", "SG", "SK", "SI", "SB", "SO", "ZA", "KR", "SS", "ES",
                       "LK", "PS", "SD", "SR", "SE", "CH", "SY", "ST", "TW", "TJ", "TZ", "TH", "BS", "GM", "TL", "TG",
                       "TO", "TT", "TN", "TR", "TM", "TV", "UG", "UA", "AE", "GB", "US", "UY", "UZ", "VU", "VA", "VE",
-                      "VN", "XK", "YE", "ZM", "ZW"]
+                      "VN", "YE", "ZM", "ZW", 'XK', 'GL', 'EH', 'NC']
 
 def pushminiocountry(country):
     print(f"> Starting pushing files to minio ({country})")
