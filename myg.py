@@ -87,7 +87,10 @@ def subprocess_country(country):
         if not nd:
             subprocess.run(f"python osm-power-grid-map-analysis/scripts/podoma_extractor/run.py layerbuild ln -c {country}", shell=True, check=True)
             subprocess.run(f"python osm-power-grid-map-analysis/scripts/podoma_extractor/run.py layerbuild sub -c {country}", shell=True, check=True)
-            subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {country} -d -k bc", shell=True, check=True)
+            subprocess.run(
+                f"python osm-power-grid-map-analysis/scripts/podoma_extractor/run.py layerbuild circ -c {country}",
+                shell=True, check=True)
+            subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {country} -d -k bcd", shell=True, check=True)
         subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {country} -g -s podoma", shell=True, check=True)
         subprocess.run(f"python gridinspector/quality_grid_stats/run.py osmose {country}", shell=True, check=True)
         subprocess.run(f"python gridinspector/quality_grid_stats/run.py qgstats {country} -s podoma", shell=True, check=True)
@@ -192,7 +195,8 @@ parser.add_argument("country", help="Country code iso a2")
 parser.add_argument("-d", "--download", action="store_true", help="Download only")
 parser.add_argument("-g", "--graph", action="store_true", help="Graph analysis only")
 parser.add_argument("-nd", "--nodownload", action="store_true", help="No download")
-parser.add_argument("-s", "--source", action="store_true", help="Source")
+parser.add_argument("-s", "--source", type=str, help="Source", default="podoma")
+parser.add_argument("-t", "--time", type=str, help="Date of layer", default="CURRENT_TIMESTAMP")
 args = parser.parse_args()
 
 d, g, nd = args.download, args.graph, args.nodownload
@@ -298,3 +302,11 @@ if args.action == "qgismapcountry":
         raise AttributeError("No country indicated")
     subprocess.run(f"python3 osm-power-grid-map-analysis/qgis/standalone-automation.py {args.country}", shell=True)
 
+if args.action == "layerbuid":
+    if not args.country:
+        raise AttributeError("No country indicated")
+    if args.source == "podoma":
+        script_base = "python osm-power-grid-map-analysis/scripts/podoma_extractor/run.py layerbuild"
+        subprocess.run(f"{script_base} ln -c {args.country} -d {args.time}", shell=True, check=True)
+        subprocess.run(f"{script_base} sub -c {args.country} -d {args.time}", shell=True, check=True)
+        subprocess.run(f"{script_base} cir -c {args.country} -d {args.time}", shell=True, check=True)
