@@ -88,7 +88,7 @@ def subprocess_country(country):
             subprocess.run(f"python osm-power-grid-map-analysis/scripts/podoma_extractor/run.py layerbuild ln -c {country}", shell=True, check=True)
             subprocess.run(f"python osm-power-grid-map-analysis/scripts/podoma_extractor/run.py layerbuild sub -c {country}", shell=True, check=True)
             subprocess.run(
-                f"python osm-power-grid-map-analysis/scripts/podoma_extractor/run.py layerbuild circ -c {country}",
+                f"python osm-power-grid-map-analysis/scripts/podoma_extractor/run.py layerbuild cir -c {country}",
                 shell=True, check=True)
             subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {country} -d -k bcd", shell=True, check=True)
         subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {country} -g -s podoma", shell=True, check=True)
