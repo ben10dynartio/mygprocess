@@ -203,26 +203,31 @@ d, g, nd = args.download, args.graph, args.nodownload
 if (not d) & (not g):
     d, g = True, True
 
-if args.action == "pushminiocountry":
-    if not args.country:
-        raise AttributeError("No country indicated")
-    pushminiocountry(args.country)
+match args.action:
+    case "pushminiocountry":
+        if not args.country:
+            raise AttributeError("No country indicated")
+        pushminiocountry(args.country)
 
-if args.action == "pushminiocountries":
-    pushminiocountries()
+    case "pushminiocountries":
+        pushminiocountries()
 
-if args.action == "pushminioworld":
-    pushminioworld()
+    case "pushminioworld":
+        pushminioworld()
 
-if args.action == "overpass":
-    if not args.country:
-        raise AttributeError("No country indicated")
-    subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {args.country} -d", shell=True)
+    case "overpass":
+        if not args.country:
+            raise AttributeError("No country indicated")
+        subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {args.country} -d", shell=True)
 
-if args.action == "graphanalysis":
-    if not args.country:
-        raise AttributeError("No country indicated")
-    subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {args.country} -g", shell=True)
+    case "graphanalysis":
+        if not args.country:
+            raise AttributeError("No country indicated")
+        subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {args.country} -g", shell=True)
+
+    case _:
+        print("Not in match case ...")
+
 
 if args.action == "buildgraphworld":
     subprocess.run(f"python osm-power-grid-map-analysis/scripts/gather_country_graph.py", shell=True)
@@ -302,7 +307,7 @@ if args.action == "qgismapcountry":
         raise AttributeError("No country indicated")
     subprocess.run(f"python3 osm-power-grid-map-analysis/qgis/standalone-automation.py {args.country}", shell=True)
 
-if args.action == "layerbuid":
+if args.action == "layerbuild":
     if not args.country:
         raise AttributeError("No country indicated")
     if args.source == "podoma":
