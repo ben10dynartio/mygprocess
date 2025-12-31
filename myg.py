@@ -191,12 +191,12 @@ def updatecountry(country):
 def copywww():
     # Liste de fichiers à copier
     fichiers = [
-        "databox/gridinspector/indicators_map/gridinspector.html",
-        "databox/gridinspector/indicators_map/indicatorsmethodo.html",
-        "databox/gridinspector/indicators_map/worldmap_indicators.json",
-        "databox/gridinspector/indicators_map/logo_openinframap.png",
-        "databox/gridinspector/indicators_map/logo-github.svg",
-        "databox/gridinspector/indicators_map/favicon.ico",
+        "gridinspector/indicators_map/gridinspector.html",
+        "gridinspector/indicators_map/indicatorsmethodo.html",
+        "databox/00_WORLD/worldmap_indicators.json",
+        "gridinspector/indicators_map/logo_openinframap.png",
+        "gridinspector/indicators_map/logo-github.svg",
+        "gridinspector/indicators_map/favicon.ico",
     ]
 
     # Répertoire de destination
