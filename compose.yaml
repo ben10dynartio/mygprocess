@@ -19,6 +19,7 @@ services:
     #./releasedata/:/app/releasedata/
       - ./logs/:/app/logs/
       - ./databox:/app/databox
+      - ./www:/app/www
     #env_file: multipass/.pyscripts-env
     env_file:
       - multipass/.env.pyscripts

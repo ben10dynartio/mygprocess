@@ -6,6 +6,7 @@ import argparse
 import os
 import subprocess
 from pathlib import Path
+import shutil
 
 from filorion import MinioFileStorage
 
@@ -160,7 +161,7 @@ def pushminioworld():
         "awesomelist.csv"
     ]:
         try:
-            fileclient.push_file(f"gridinspector/databox/00_WORLD/{filename}",
+            fileclient.push_file(f"databox/00_WORLD/{filename}",
                                  f"data-worldwide/{filename}")
         except Exception as e:
             print(f"** ERROR when pushing file '{filename}':")
@@ -185,6 +186,25 @@ def updatecountry(country):
     mergeworld()
     pushminiocountry(country)
     pushminioworld()
+
+
+def copywww():
+    # Liste de fichiers à copier
+    fichiers = [
+        "databox/gridinspector/indicators_map/gridinspector.html",
+        "databox/gridinspector/indicators_map/indicatorsmethodo.html",
+        "databox/gridinspector/indicators_map/worldmap_indicators.json",
+        "databox/gridinspector/indicators_map/logo_openinframap.png",
+        "databox/gridinspector/indicators_map/logo-github.svg",
+        "databox/gridinspector/indicators_map/favicon.ico",
+    ]
+
+    # Répertoire de destination
+    destination = Path("www")
+
+    # Copier les fichiers
+    for fichier in fichiers:
+        shutil.copy(fichier, destination)
 
 
 ############## SCRIPTS ARGUMENT
@@ -215,6 +235,9 @@ match args.action:
     case "pushminioworld":
         pushminioworld()
 
+    case "copywww":
+        copywww()
+
     case "overpass":
         if not args.country:
             raise AttributeError("No country indicated")
@@ -225,12 +248,11 @@ match args.action:
             raise AttributeError("No country indicated")
         subprocess.run(f"python osm-power-grid-map-analysis/scripts/run.py {args.country} -g", shell=True)
 
+    case "buildgraphworld":
+        subprocess.run(f"python osm-power-grid-map-analysis/scripts/gather_country_graph.py", shell=True)
     case _:
         print("Not in match case ...")
 
-
-if args.action == "buildgraphworld":
-    subprocess.run(f"python osm-power-grid-map-analysis/scripts/gather_country_graph.py", shell=True)
 
 if args.action == "osmose":
     if not args.country:
