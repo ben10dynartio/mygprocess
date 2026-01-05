@@ -18,19 +18,20 @@ MINIO_ACCESSKEY = os.environ.get("MINIO_ACCESSKEY")
 fileclient = MinioFileStorage(bucket_name="mapyourgrid", endpoint="myg-minio:9000",
                               access_key=MINIO_ACCESSKEY, secret_key=MINIO_SECRETKEY, secure=False)
 
-LIST_COUNTRY_CODES = ["AF", "AL", "DZ", "AD", "AO", "AG", "AR", "AM", "AU", "AT", "AZ", "BH", "BD", "BB", "BY", "BE",
-                      "BZ", "BJ", "BT", "BO", "BA", "BW", "BR", "BN", "BG", "BF", "BI", "KH", "CM", "CA", "CV", "CF",
-                      "TD", "CL", "CO", "KM", "CR", "HR", "CU", "CY", "CZ", "CD", "DK", "DJ", "DM", "DO", "EC", "EG",
-                      "SV", "GQ", "ER", "EE", "SZ", "ET", "FM", "FJ", "FI", "FR", "GA", "GE", "DE", "GH", "GR", "GD",
-                      "GT", "GN", "GW", "GY", "HT", "HN", "HU", "IS", "IN", "ID", "IR", "IQ", "IE", "IL", "IT", "CI",
-                      "JM", "JP", "JO", "KZ", "KE", "NL", "KI", "KW", "KG", "LA", "LV", "LB", "LS", "LR", "LY", "LI",
-                      "LT", "LU", "MG", "MW", "MY", "MV", "ML", "MT", "MH", "MR", "MU", "MX", "MD", "MC", "MN", "ME",
-                      "MA", "MZ", "MM", "NA", "NR", "NP", "NZ", "NI", "NE", "NG", "KP", "MK", "NO", "OM", "PK", "PW",
-                      "PA", "PG", "PY", "CN", "PE", "PH", "PL", "PT", "QA", "CG", "RO", "RU", "RW", "KN", "LC", "VC",
-                      "WS", "SM", "SA", "SN", "RS", "SC", "SL", "SG", "SK", "SI", "SB", "SO", "ZA", "KR", "SS", "ES",
-                      "LK", "PS", "SD", "SR", "SE", "CH", "SY", "ST", "TW", "TJ", "TZ", "TH", "BS", "GM", "TL", "TG",
-                      "TO", "TT", "TN", "TR", "TM", "TV", "UG", "UA", "AE", "GB", "US", "UY", "UZ", "VU", "VA", "VE",
-                      "VN", "YE", "ZM", "ZW", 'XK', 'GL', 'EH', 'NC']
+LIST_COUNTRY_CODES = ['AD', 'AE', 'AF', 'AG', 'AI', 'AL', 'AM', 'AO', 'AQ', 'AR', 'AT', 'AU', 'AZ', 'BA', 'BB', 'BD',
+                      'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BM', 'BN', 'BO', 'BR', 'BS', 'BT', 'BW', 'BY', 'BZ', 'CA',
+                      'CD', 'CF', 'CG', 'CH', 'CI', 'CL', 'CM', 'CN', 'CO', 'CR', 'CU', 'CV', 'CY', 'CZ', 'DE', 'DJ',
+                      'DK', 'DM', 'DO', 'DZ', 'EC', 'EE', 'EG', 'EH', 'ER', 'ES', 'ET', 'FI', 'FJ', 'FK', 'FM', 'FO',
+                      'FR', 'GA', 'GB', 'GD', 'GE', 'GG', 'GH', 'GI', 'GL', 'GM', 'GN', 'GQ', 'GR', 'GS', 'GT', 'GW',
+                      'GY', 'HN', 'HR', 'HT', 'HU', 'ID', 'IE', 'IL', 'IM', 'IN', 'IO', 'IQ', 'IR', 'IS', 'IT', 'JE',
+                      'JM', 'JO', 'JP', 'KE', 'KG', 'KH', 'KI', 'KM', 'KN', 'KP', 'KR', 'KW', 'KY', 'KZ', 'LA', 'LB',
+                      'LC', 'LI', 'LK', 'LR', 'LS', 'LT', 'LU', 'LV', 'LY', 'MA', 'MC', 'MD', 'ME', 'MG', 'MH', 'MK',
+                      'ML', 'MM', 'MN', 'MR', 'MS', 'MT', 'MU', 'MV', 'MW', 'MX', 'MY', 'MZ', 'NA', 'NC', 'NE', 'NG',
+                      'NI', 'NL', 'NO', 'NP', 'NR', 'NZ', 'OM', 'PA', 'PE', 'PG', 'PH', 'PK', 'PL', 'PN', 'PS', 'PT',
+                      'PW', 'PY', 'QA', 'RO', 'RS', 'RU', 'RW', 'SA', 'SB', 'SC', 'SD', 'SE', 'SG', 'SH', 'SI', 'SK',
+                      'SL', 'SM', 'SN', 'SO', 'SR', 'SS', 'ST', 'SV', 'SY', 'SZ', 'TC', 'TD', 'TG', 'TH', 'TJ', 'TL',
+                      'TM', 'TN', 'TO', 'TR', 'TT', 'TV', 'TW', 'TZ', 'UA', 'UG', 'US', 'UY', 'UZ', 'VA', 'VC', 'VE',
+                      'VG', 'VN', 'VU', 'WS', 'XK', 'YE', 'ZA', 'ZM', 'ZW']
 
 def pushminiocountry(country):
     print(f"> Starting pushing files to minio ({country})")
@@ -149,8 +150,8 @@ def pushminiocountries():
 def pushminioworld():
     print(f"> Starting pushing files to minio (worldwide)")
     for filename in [
-        "worldmap_indicators.geojson",
-        "worldmap_indicators.json",
+        "gridinspector_data.geojson",
+        "gridinspector_data.json",
         "voltage_operator.csv",
         "list_osm_errors.json",
         "openinframap_countries_info_brut.csv",
@@ -179,6 +180,7 @@ def fullupdate():
     mergeworld()
     pushminiocountries()
     pushminioworld()
+    copywww()
 
 
 def updatecountry(country):
@@ -189,22 +191,25 @@ def updatecountry(country):
 
 
 def copywww():
-    # Liste de fichiers à copier
-    fichiers = [
-        "gridinspector/indicators_map/gridinspector.html",
-        "gridinspector/indicators_map/indicatorsmethodo.html",
-        "databox/00_WORLD/worldmap_indicators.json",
-        "gridinspector/indicators_map/logo_openinframap.png",
-        "gridinspector/indicators_map/logo-github.svg",
-        "gridinspector/indicators_map/favicon.ico",
+    # List of files to serve on www
+    files = [
+        ("gridinspector/indicators_map/index.html", "gridinspector/index.html"),
+        ("gridinspector/indicators_map/methodology.html", "gridinspector/methodology.html"),
+        ("databox/00_WORLD/gridinspector_data.json", "gridinspector/gridinspector_data.json"),
+        ("gridinspector/indicators_map/logo_openinframap.png","gridinspector/logo_openinframap.png"),
+        ("gridinspector/indicators_map/logo-github.svg","gridinspector/logo-github.svg"),
+        ("gridinspector/indicators_map/favicon.ico","gridinspector/favicon.ico"),
+        ("databox/00_WORLD/awesomelist.csv","files/awesomelist.csv"),
+        ("databox/00_WORLD/wikidata_countries_info_lua.txt","files/wikidata_countries_info_lua.txt"),
+        ("databox/00_WORLD/openinframap_countries_info_lua.txt","files/openinframap_countries_info_lua.txt"),
     ]
 
     # Répertoire de destination
     destination = Path("www")
 
-    # Copier les fichiers
-    for fichier in fichiers:
-        shutil.copy(fichier, destination)
+    # Copy file
+    for fil in files:
+        shutil.copy(fil[0], destination / fil[1])
 
 
 ############## SCRIPTS ARGUMENT
