@@ -206,7 +206,8 @@ def copywww():
 
     # Répertoire de destination
     destination = Path("www")
-
+    Path("www/gridinspector").mkdir(exist_ok=True)
+    Path("www/files").mkdir(exist_ok=True)
     # Copy file
     for fil in files:
         shutil.copy(fil[0], destination / fil[1])
